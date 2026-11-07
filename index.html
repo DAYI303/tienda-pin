@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>P!N · Tienda virtual</title>
+
+<style>
+:root{--pink:#dd0080;--yellow:#fec532;--navy:#141c4d;--deep:#0a0038;--cream:#fbf7f0;--r:28px}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth;scroll-padding-top:12px}
+body{font-family:"Trebuchet MS","Segoe UI",system-ui,sans-serif;background:var(--cream);color:var(--navy);letter-spacing:.04em;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+button{font:inherit;letter-spacing:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--pink);outline-offset:2px}
+
+/* ENCABEZADO */
+.top{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;padding:10px 16px 8px}
+.top .star{justify-self:start;width:56px;height:56px}
+.slot{display:grid;place-items:center;text-align:center;width:100%;height:100%;background:var(--yellow);color:var(--navy);border:2px dashed var(--navy);border-radius:14px;font-size:.62rem;line-height:1.15;padding:2px}
+.top .star img,.logo img{width:100%;height:100%;object-fit:contain}
+.logo{width:140px;height:46px}
+.top .logo{justify-self:center;text-align:center}
+.icons{justify-self:end;display:flex;gap:14px;align-items:center}
+.icons a,.icons button{background:none;border:0;position:relative;width:34px;height:34px;color:var(--deep)}
+.icons svg{width:100%;height:100%}
+.badge{position:absolute;top:-4px;right:-6px;background:var(--pink);color:#fff;font-size:.7rem;font-weight:700;min-width:18px;height:18px;border-radius:9px;display:grid;place-items:center}
+.menu{grid-column:1/-1;display:flex;flex-wrap:wrap;justify-content:center;gap:6px 28px;padding-top:2px}
+.menu a{font-size:1.05rem;padding:4px 2px;border-bottom:2px solid transparent}
+.menu a:hover{border-color:var(--pink)}
+
+/* FRANJAS (marquesina) */
+.strip{overflow:hidden;white-space:nowrap;font-weight:800;font-size:.8rem;padding:7px 0}
+.strip.y{background:var(--yellow);color:var(--navy)}
+.strip.p{background:var(--pink);color:#fff;border-block:1px solid #ff6ab8}
+.strip .static{white-space:normal;text-align:center}
+.track{display:inline-flex;animation:slide 30s linear infinite;will-change:transform}
+.track span{padding:0 22px}
+.track a{text-decoration:underline}
+@keyframes slide{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.track{animation-duration:120s}}
+
+/* BANNER */
+.hero{position:relative;min-height:290px;display:grid;place-items:start center;padding:30px 16px;background:var(--cream) center/cover no-repeat}
+.hero-slot{position:absolute;inset:0;background:var(--pink);color:#fff;display:grid;place-items:end center;padding:0 16px 24px;text-align:center;font-weight:700;overflow:hidden}
+.hero-slot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.search{position:relative;display:flex;align-items:center;gap:10px;width:min(100%,680px);background:var(--cream);border:3px solid #555;border-radius:40px;padding:6px 8px 6px 16px}
+.search svg{width:26px;height:26px;flex:none}
+.search input{flex:1;min-width:0;border:0;background:none;font:inherit;font-size:1.05rem;padding:10px 4px;color:var(--deep)}
+.search input:focus{outline:0}
+.search button{border:0;background:var(--pink);color:#fff;font-weight:700;border-radius:30px;padding:10px 18px}
+
+/* MARCAS */
+.brands{background:var(--deep);padding:14px 16px;display:flex;flex-wrap:wrap;justify-content:center;gap:12px 36px}
+.brand{display:flex;align-items:center;gap:12px;color:#fff;font-size:1.1rem;padding:4px 14px 4px 4px;border-radius:40px;transition:background .2s}
+.brand:hover{background:#ffffff1f}
+.brand .ph{width:46px;height:46px;border-radius:50%;background:var(--yellow);overflow:hidden;flex:none;display:grid;place-items:center;color:var(--navy);font-size:.6rem;text-align:center}
+.brand .ph img{width:100%;height:100%;object-fit:cover}
+
+/* CATÁLOGO */
+.catalog{max-width:1180px;margin:0 auto;padding:34px 20px 60px;display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.card{border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:6px;transition:transform .2s;min-width:0}
+.card:hover{transform:translateY(-4px)}
+.card.pink{background:var(--pink);color:var(--cream)}
+.card.yellow{background:var(--yellow);color:var(--navy)}
+.card.navy{background:var(--navy);color:var(--cream)}
+.photo{aspect-ratio:4/5;border-radius:12px;background:#ffffff40;display:grid;place-items:center;text-align:center;font-size:.8rem;overflow:hidden;padding:8px}
+.photo img{width:100%;height:100%;object-fit:cover;border-radius:12px}
+.card h3{font-size:1rem;font-weight:400;overflow-wrap:anywhere}
+.card .sold{font-size:.9rem;opacity:.9}
+.card .price{font-size:1.5rem;font-weight:800}
+.empty{grid-column:1/-1;text-align:center;padding:40px 0}
+
+/* PRODUCTO */
+.product{max-width:1000px;margin:0 auto;padding:28px 20px 60px;display:grid;grid-template-columns:1.1fr 1fr;gap:32px}
+.gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.gallery .photo{background:var(--yellow);color:var(--navy)}
+.gallery .photo:first-child{grid-column:1/-1;aspect-ratio:4/5;background:var(--pink);color:#fff}
+.info h1{font-size:1.9rem;overflow-wrap:anywhere}
+.info .price{font-size:2rem;font-weight:800;color:var(--pink);margin:8px 0 14px}
+.info p{line-height:1.6;margin-bottom:18px}
+.sizes{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 22px}
+.sizes button{border:2px solid var(--navy);background:none;color:var(--navy);border-radius:20px;padding:8px 16px;font-weight:700}
+.sizes button[aria-pressed=true]{background:var(--navy);color:#fff}
+.btn{display:inline-block;border:0;border-radius:30px;padding:14px 28px;font-weight:800;background:var(--pink);color:#fff}
+.btn.alt{background:none;color:var(--navy);border:2px solid var(--navy)}
+.actions{display:flex;flex-wrap:wrap;gap:12px}
+.msg{min-height:1.4em;margin-top:12px;font-size:.9rem}
+
+/* CARRITO */
+.cart{position:fixed;inset:0 0 0 auto;width:min(380px,100%);background:var(--cream);border-left:4px solid var(--navy);padding:20px;transform:translateX(105%);transition:transform .3s;z-index:20;overflow:auto}
+.cart.open{transform:none}
+.cart h2{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.cart li{list-style:none;display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid #0001}
+.cart li button{border:0;background:none;color:var(--pink);font-weight:700}
+
+/* FOOTER */
+footer{background:var(--deep);color:var(--cream);padding:40px 20px 24px}
+.fgrid{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+footer h4{color:var(--yellow);margin-bottom:10px}
+footer p,footer li{line-height:1.7;list-style:none;font-size:.95rem}
+footer a:hover{color:var(--yellow)}
+.copy{text-align:center;font-size:.8rem;margin-top:30px;opacity:.7}
+
+@media(max-width:900px){.catalog{grid-template-columns:repeat(2,1fr)}.fgrid{grid-template-columns:1fr 1fr}}
+@media(max-width:700px){.product{grid-template-columns:1fr}.catalog{gap:14px;padding:24px 14px 40px}.top .star{width:42px;height:42px}.logo{width:100px;height:36px}.hero{min-height:220px}}
+@media(max-width:480px){.fgrid{grid-template-columns:1fr}.card .price{font-size:1.25rem}.search button{padding:10px 12px}}
+@media(max-width:340px){.catalog{grid-template-columns:1fr}}
+.brand-link{display:inline-flex;align-items:center;gap:10px;margin-top:18px;font-weight:800}
+.brand-link img{width:36px;height:36px;border-radius:50%;object-fit:cover;background:var(--yellow)}
+.brand-link:hover span{color:var(--pink);text-decoration:underline}
+.filters{max-width:1180px;margin:26px auto 0;padding:0 20px;display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
+.filters button{border:2px solid var(--navy);background:none;color:var(--navy);border-radius:30px;padding:9px 22px;font-weight:700}
+.filters button[aria-pressed=true]{background:var(--pink);border-color:var(--pink);color:#fff}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="top">
+    <a class="star" id="starLink" href="#" aria-label="Inicio"></a>
+    <a class="logo" id="logoLink" href="#" aria-label="P!N inicio"></a>
+    <div class="icons">
+      <a id="cartLink" href="#" aria-label="Carrito" role="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h3l2.5 12h11L21 7H6"/><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/></svg>
+        <span class="badge" id="cartCount">0</span>
+      </a>
+      <a id="profileLink" href="#" aria-label="Mi perfil">
+        <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="7" r="4.5"/><path d="M3 22c0-5 4-8 9-8s9 3 9 8z"/></svg>
+      </a>
+    </div>
+    <nav class="menu" aria-label="Principal">
+      <a href="#catalogo">Menú</a>
+      <a href="marcas.html">Marcas</a>
+      <a href="#nosotros">Nosotros</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+  </div>
+  <div class="strip y" aria-label="Ofertas"><div class="static" data-marquee="offers"></div></div>
+</header>
+
+<main>
+  <section id="home">
+    <div class="hero" id="hero">
+      <div class="hero-slot" id="heroSlot"></div>
+      <form class="search" id="searchForm" role="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round"><circle cx="10" cy="10" r="7"/><path d="M15.5 15.5L21 21"/></svg>
+        <input id="searchInput" type="search" placeholder="Buscar productos" aria-label="Buscar productos">
+        <button type="submit">Buscar</button>
+      </form>
+    </div>
+
+    <section class="brands" id="marcas" aria-label="Marcas"></section>
+    <div class="strip p" aria-label="Ofertas"><div class="track" data-marquee="promo"></div></div>
+<div class="filters" id="filters" role="group" aria-label="Filtrar por categoría">
+  <button type="button" data-cat="" aria-pressed="true">Todo</button>
+  <button type="button" data-cat="chaquetas" aria-pressed="false">Chaquetas</button>
+  <button type="button" data-cat="vestidos" aria-pressed="false">Vestidos</button>
+  <button type="button" data-cat="jeans" aria-pressed="false">Jeans</button>
+</div>
+    <section class="catalog" id="catalogo" aria-label="Catálogo"></section>
+  </section>
+
+  <section id="productView" hidden></section>
+</main>
+
+<footer>
+  <div class="fgrid">
+    <div id="nosotros"><h4>Nosotros</h4><p id="aboutText"></p></div>
+    <div id="contacto"><h4>Contacto</h4><ul id="contactList"></ul></div>
+    <div><h4>Síguenos</h4><ul id="socialList"></ul></div>
+  </div>
+  <p class="copy">© P!N · Todos los derechos reservados</p>
+</footer>
+
+<aside class="cart" id="cartPanel" aria-label="Carrito">
+  <h2>Tu carrito <button type="button" id="cartClose" aria-label="Cerrar" style="border:0;background:none;font-size:1.6rem">×</button></h2>
+  <ul id="cartItems"></ul>
+  <p id="cartEmpty">Aún no has agregado productos.</p>
+  <p style="margin:16px 0;font-weight:800" id="cartTotal"></p>
+  <!-- Aquí puedes conectar tu pasarela de pago -->
+  <a class="btn" id="checkoutLink" href="#">Ver carrito y pagar</a>
+</aside>
+
+<script>
+
+const CONFIG = {
+  starImage: "img/estrella.png",           
+  logoImage: "img/logo.png",           
+  heroImage: "img/banner.jpeg",            
+  offerText: "OFERTAS 50%",
+  links: {
+    home: "index.html",     
+    cart: "carrito.html",   
+    offers: "ofertas.html",  
+  
+  },
+  brands: [
+    { name: "KOAJ",      image: "img/koaj.jpeg", url: "marcas.html#koaj" },   // ← imagen y URL de cada marca
+    { name: "KARIBIK",   image: "img/karibik.jpeg", url: "marcas.html#karibik" },
+    { name: "STUDIO F", image: "img/estudiof.jpeg", url: "marcas.html#estudio-f" }
+  ],
+  about: "P!N SOMOS UNA PAGINA 100% CONFIABLE",
+  contact: [                // ← agrega o quita líneas
+    { label: "Correo: pin@gmail.com", url: "" },
+    { label: "WhatsApp: 3002415625", url: "" }
+  ],
+  social: [
+    { label: "Instagram: @pin.",  },
+    { label: "Facebook:  @pin"  },
+    { label: "TikTok: @pin "   }
+  ]
+};
+
+   const PRODUCTS = [
+  { id:"producto-1", name:"BLUSA SEMI AMPLIA TIRAS BRAN",sold:"104", price:"$26.955",brand:"KARIBIK",  desc:"Blusa De Tiras -Silueta Semi Amplia-KARIBIk", sizes:["S","M","L"], images:["img/blusasemi.jpeg","img/blusasemi2.jpeg","img/blusasemi3.jpeg","img/blusasemi4.jpeg"] },
+  { id:"producto-2", name:"TOP BUSTIER 3D", sold:"80", price:"$188.820",brand:"STUDIO F", desc:"Top bustier tono medio con flores 3d-STUDIO F", sizes:["S","M","L"], images:["img/topf.jpeg","img/topf2.jpeg","img/topf3.jpeg","img/topf4.jpeg"] },
+  { id:"producto-3", name:"BLUSA LOTTI", sold:"30",brand:"KARIBIK", price:"$71.910", desc:"BLUSA AJUSTADA MANGA LARGA LOTTI- KARIBIK", sizes:["S","M","L"], images:["img/lotti.jpeg","img/lotti3.jpeg","img/lotti2.jpeg","img/lotti4.jpeg","img/lotti3.jpeg"] },
+  { id:"producto-4", name:"BLUSA APLIQUES FLOR", sold:"10", price:"$251.307",brand:"STUDIO F", desc:"Blusa camisera manga ancha, apliques-ESTUDIO F", sizes:["S","M","L"], images:["img/flor.jpeg","img/flor2.jpeg","img/flor3.jpeg","img/flor4.jpeg",] },
+  { id:"producto-5", name:"JEAN DADFIT DESCADERADO UNIVERSAL", sold:"50",category:"jeans", price:"$71.955",brand:"KARIBIK", desc:"Jean dad fit -silueta amplia -talle medio -proceso de desgaste en lavandería- KARIBIK", sizes:["10","12","16"], images:["img/dadfit2.jpeg","img/dadfit.jpeg","img/dadfit3.jpeg","img/dadfit4.jpeg"] },
+  { id:"producto-6", name:"CAMISETA BLANCA", sold:"105",brand:"KOAJ", price:"$22.410", desc:"Camiseta manga corta crema clara con diseño de Megadeth-KOAJ.", sizes:["S","M","L"], images:["img/mega.jpeg","img/mega2.jpeg","img/mega3.jpeg","img/mega4.jpeg",] },
+  { id:"producto-7", name:"VESTIDO AJUSTADO",category:"vestidos", sold:"200",brand:"KARIBIK", price:"$107.910", desc:"VESTIDO AJUSTADO CORTO OFF SHOULDER BRAD", sizes:["S","M","L"], images:["img/shouldot2.jpeg","img/shouldot.jpeg","img/shouldot3.jpeg","img/shouldot4.jpeg",] },
+  { id:"producto-8", name:"CHAQUETA-CARLOS VIVES", sold:"57",category:"chaquetas", price:"$207.000",brand:"KOAJ", desc:"Chaqueta de jean azul clara con diseños de Carlos Vives.", sizes:["S","M","L"], images:["img/chaqueta2.jpeg","img/chaqueta.jpeg","img/chaqueta3.jpeg","img/chaqueta4.jpeg",] },
+  { id:"producto-9", name:"CHAQUETA BOMBER AURIE", sold:"50",category:"chaquetas", price:"$179.910",brand:"KARIBIK", desc:"Chaqueta bordada de flor.", sizes:["S","M","L"], images:["img/aurie.jpeg","img/aurie2.jpeg","img/aurie3.jpeg","img/aurie4.jpeg"] },
+  { id:"karibik-1", name:"VESTIDO AJUSTADO LARGO MANGA SISA ARENAS",category:"vestidos", brand:"KARIBIK", sold:"30", price:"$35.955",desc:"VESTIDO AJUSTADO LARGO MANGA SISA ARENAS",sizes:["S","M","L"],images:["img/tubo.jpeg","img/tubo2.jpeg","img/tubo3.jpeg","img/tubo4.jpeg"]},
+  { id:"koaj-1", name:"SUETER RAYAS", brand:"KOAJ", sold:"20", price:"$35.955",desc:"Camiseta kaki clara polo con cremallera y rayas rojas", sizes:["S","M","L"],images:["img/rayas.jpeg","img/rayas3.jpeg","img/rayas2.jpeg","img/rayas4.jpeg"]},
+  { id:"koaj-2", name:"BLUSA SATIN", brand:"KOAJ", sold:"100", price:"$53.910", desc:"Blusa en satín unicolor manga larga con botones y estampados.", sizes:["S","M","L"], images:["img/rallas.jpeg","img/rallas2.jpeg","img/rallas3.jpeg","img/rallas4.jpeg"] },
+  { id:"koaj-3", name:"JEAN LEAG ", category:"jeans", brand:"KOAJ", sold:"75", price:"$89.910",desc:"Jean infaltables tipo open leg azul medio con bota ancha", sizes:["10","12","14"],images:["img/jean.jpeg","img/jean2.jpeg","img/jean3.jpeg","img/jean4.jpeg"]},
+  { id:"koaj-4", name:"CAMISETA ITALY", brand:"KOAJ", sold:"15", price:"$22.455", desc:"Camiseta crema con manga corta college de Fan Edition", sizes:["S","M","L"], images:["img/italy4.jpeg","img/italy.jpeg","img/italy2.jpeg","img/italy3.jpeg"] },
+  { id:"estudiof-1", name:"FALDA GLOBO", brand:"ESTUDIO F",sold:"75",sizes:["S","M","L"],price:"$88.110",desc:"Falda larga globo con cinturón",images:["img/globo.jpeg","img/globo2.jpeg","img/globo3.jpeg","img/globo4.jpeg"] },
+  { id:"estudiof-2", name:"BLUSA MANGA", category:"", brand:"ESTUDIO F", sold:"40", price:"$201.600",  desc:"Blusa manga color blanco", sizes:["S","M","L"], images:["img/blanca.jpeg","img/blanca4.jpeg","img/blanca2.jpeg","img/blanca3.jpeg"] },
+  { id:"estudiof-3", name:"CHAQUETA DE CUADROS", category:"chaquetas", brand:"ESTUDIO F", sold:"20", price:"$270.000", desc:"Chaqueta entallada de cuadros ", sizes:["S","M","L"], images:["img/chanel.jpeg","img/chanel2.jpeg","img/chanel3.jpeg","img/chanel4.jpeg"] },
+  { id:"estudiof-4", name:"CHAQUETA CUELLO ALTO", category:"chaquetas", brand:"ESTUDIO F", sold:"35", price:"$270.000", desc:"Chaqueta manga larga con cuello alto", sizes:["S","M","L"], images:["img/choco2.jpeg","img/choco.jpeg","img/choco3.jpeg","img/choco4.jpeg"] }
+];
+
+const $ = s => document.querySelector(s);
+const esc = t => String(t ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const COLORS = ["pink","yellow","pink","yellow","pink","navy","pink","navy","pink"];
+
+
+function setLink(el, url){
+  if(url){ el.href = url; }
+  else { el.removeAttribute("href"); el.style.cursor = "default"; }
+}
+
+/* Carrito (estructura lista para ampliar) */
+let cart = [];
+try { cart = JSON.parse(localStorage.getItem("pin-cart")) || []; } catch(e){}
+function saveCart(){ try{ localStorage.setItem("pin-cart", JSON.stringify(cart)); }catch(e){} }
+function addToCart(product, size){
+  cart.push({ id: product.id, name: product.name, price: product.price, size, image:(product.images&&product.images[0])||"", href:"index.html#/producto/"+encodeURIComponent(product.id), note:product.note||"", isNew:!!product.isNew, sel:true });
+  saveCart(); renderCart();
+}
+function removeFromCart(i){ cart.splice(i,1); saveCart(); renderCart(); }
+function renderCart(){
+  $("#cartCount").textContent = cart.length;
+  $("#cartEmpty").hidden = cart.length > 0;
+  $("#cartItems").innerHTML = cart.map((c,i) =>
+    `<li><span>${esc(c.name)}${c.size ? " · " + esc(c.size) : ""}<br>${esc(c.price)}</span><button type="button" data-rm="${i}">Quitar</button></li>`).join("");
+  $("#cartTotal").textContent = cart.length ? cart.length + " producto(s)" : "";
+}
+const panel = $("#cartPanel");
+$("#cartItems").addEventListener("click", e => { if(e.target.dataset.rm) removeFromCart(+e.target.dataset.rm); });
+$("#cartClose").onclick = () => panel.classList.remove("open");
+
+/* Encabezado, franjas, marcas, footer */
+function initStatic(){
+  const L = CONFIG.links;
+  $("#logoLink").innerHTML = CONFIG.logoImage
+    ? `<img src="${esc(CONFIG.logoImage)}" alt="P!N">`
+    : `<span class="slot">Tu logo<br>400×140 px</span>`;
+  $("#starLink").innerHTML = CONFIG.starImage
+    ? `<img src="${esc(CONFIG.starImage)}" alt="">`
+    : `<span class="slot">Tu ícono<br>200×200</span>`;
+  [$("#logoLink"), $("#starLink")].forEach(a => { a.href = L.home || "#"; });
+  setLink($("#profileLink"), L.profile);
+  const cartA = $("#cartLink");
+  if(L.cart) cartA.href = L.cart;
+  else cartA.addEventListener("click", e => { e.preventDefault(); panel.classList.add("open"); });
+  setLink($("#checkoutLink"), L.cart || "carrito.html");
+
+  const promo = `<span>${esc(CONFIG.offerText)}</span>`;
+  const fill = (html, n) => `<div style="display:inline-flex">${html.repeat(n)}</div>`;
+  document.querySelector('[data-marquee="offers"]').innerHTML = `${esc(CONFIG.offerText)} / <a ${L.offers ? `href="${esc(L.offers)}"` : ""}>VER MÁS</a>`;
+  document.querySelector('[data-marquee="promo"]').innerHTML = fill(promo,16) + fill(promo,16);
+
+  $("#heroSlot").innerHTML = CONFIG.heroImage
+    ? `<img src="${esc(CONFIG.heroImage)}" alt="" decoding="async">`
+    : `<span>Aquí va la imagen del banner<br>1600 × 600 px</span>`;
+
+  $("#marcas").innerHTML = CONFIG.brands.map(b =>
+    `<a class="brand" ${b.url ? `href="${esc(b.url)}"` : ""}><span class="ph">${b.image ? `<img src="${esc(b.image)}" alt="" loading="lazy">` : "imagen"}</span>${esc(b.name)}</a>`).join("");
+
+  $("#aboutText").textContent = CONFIG.about;
+  const li = x => `<li><a ${x.url ? `href="${esc(x.url)}" target="_blank" rel="noopener"` : ""}>${esc(x.label)}</a></li>`;
+  $("#contactList").innerHTML = CONFIG.contact.map(li).join("");
+  $("#socialList").innerHTML = CONFIG.social.map(li).join("");
+}
+
+/* Catálogo */
+function renderCatalog(list){
+  const box = $("#catalogo");
+  if(!list.length){ box.innerHTML = `<p class="empty">No encontramos productos con esa búsqueda.</p>`; return; }
+  box.innerHTML = list.map(p => {
+    const i = PRODUCTS.indexOf(p);
+    const href = p.url || `#/producto/${encodeURIComponent(p.id)}`;
+    const img = p.images[0] ? `<img src="${esc(p.images[0])}" alt="${esc(p.name)}" loading="lazy" decoding="async">` : "Foto del producto";
+    return `<a class="card ${COLORS[i % COLORS.length]}" href="${esc(href)}">
+      <div class="photo">${img}</div>
+      <h3>${esc(p.name)}</h3>
+      <span class="sold">${p.sold ? esc(p.sold) + " vendidos" : "Unidades vendidas"}</span>
+      <span class="price">${esc(p.price) || "$ Precio"}</span></a>`;
+  }).join("");
+}
+let activeCat = "";
+function applyFilters(){
+  const q = $("#searchInput").value.trim().toLowerCase();
+  renderCatalog(PRODUCTS.filter(p =>
+    (!activeCat || p.category === activeCat) &&
+    (!q || (p.name + " " + p.desc).toLowerCase().includes(q))));
+}
+$("#searchForm").addEventListener("submit", e => { e.preventDefault(); applyFilters(); location.hash = "#catalogo"; });
+$("#searchInput").addEventListener("input", applyFilters);
+$("#filters").addEventListener("click", e => {
+  const b = e.target.closest("button"); if(!b) return;
+  activeCat = b.dataset.cat;
+  $("#filters").querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b));
+  applyFilters();
+});
+
+/* Página individual de producto */
+function renderProduct(id){
+  const p = PRODUCTS.find(x => x.id === id);
+  const view = $("#productView");
+  if(!p){ view.innerHTML = `<div class="product"><div><h1>Producto no encontrado</h1><p><a class="btn" href="#catalogo">Volver al catálogo</a></p></div></div>`; return; }
+  const slots = [0,1,2,3].map(i => `<div class="photo">${p.images[i] ? `<img src="${esc(p.images[i])}" alt="${esc(p.name)} ${i+1}" loading="lazy">` : "Foto " + (i+1)}</div>`).join("");
+  view.innerHTML = `<div class="product">
+    <div class="gallery">${slots}</div>
+    <div class="info">
+      <h1>${esc(p.name)}</h1>
+      <div class="price">${esc(p.price) || "$ Precio"}</div>
+      <p>${esc(p.desc)}</p>
+      <strong>Tallas disponibles</strong>
+      <div class="sizes" id="sizes">${p.sizes.map((s,i) => `<button type="button" aria-pressed="${i===0}" data-size="${esc(s)}">${esc(s)}</button>`).join("")}</div>
+      <div class="actions">
+        <button class="btn" type="button" id="buyBtn">Comprar</button>
+        <a class="btn alt" href="#catalogo">Volver al catálogo</a>
+      </div>
+      ${(() => { const b = CONFIG.brands.find(x => x.name.toLowerCase() === String(p.brand || "").toLowerCase()); return b ? `<a class="brand-link" href="${esc(b.url || "marcas.html")}">${b.image ? `<img src="${esc(b.image)}" alt="">` : ""}<span>${esc(b.name)}</span></a>` : ""; })()}
+      <p class="msg" id="buyMsg" role="status"></p>
+    </div></div>`;
+  let size = p.sizes[0] || "";
+  $("#sizes").addEventListener("click", e => {
+    const b = e.target.closest("button"); if(!b) return;
+    size = b.dataset.size;
+    $("#sizes").querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b));
+  });
+  $("#buyBtn").onclick = () => {
+    if(p.buyUrl){ location.href = p.buyUrl; return; }
+    addToCart(p, size);
+    $("#buyMsg").textContent = "Agregado al carrito.";
+    panel.classList.add("open");
+  };
+}
+
+function route(){
+  const m = location.hash.match(/^#\/producto\/(.+)$/);
+  const isProduct = !!m;
+  $("#home").hidden = isProduct;
+  $("#productView").hidden = !isProduct;
+  panel.classList.remove("open");
+  if(isProduct){ renderProduct(decodeURIComponent(m[1])); window.scrollTo(0,0); document.title = "P!N · Producto"; }
+  else {
+    document.title = "P!N · Tienda virtual";
+    const target = location.hash.length > 1 ? document.getElementById(location.hash.slice(1)) : null;
+    setTimeout(() => target ? target.scrollIntoView() : window.scrollTo(0,0), 0);
+  }
+}
+window.addEventListener("hashchange", route);
+
+initStatic(); renderCart(); renderCatalog(PRODUCTS); route();
+</script>
+</body>
+</html>

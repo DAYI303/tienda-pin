@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>P!N · Ofertas</title>
+<style>
+:root{--pink:#dd0080;--yellow:#fec532;--navy:#141c4d;--deep:#0a0038;--cream:#fbf7f0;--r:28px}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font-family:"Trebuchet MS","Segoe UI",system-ui,sans-serif;background:var(--pink);color:var(--navy);letter-spacing:.04em;overflow-x:hidden;min-height:100vh;display:flex;flex-direction:column}
+main{flex:1}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+button{font:inherit;letter-spacing:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--yellow);outline-offset:3px}
+
+/* ENCABEZADO */
+.top{background:var(--pink);display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;padding:12px 16px;color:var(--yellow)}
+.star{justify-self:start;width:56px;height:56px}
+.logo{justify-self:center;width:140px;height:46px}
+.slot{display:grid;place-items:center;text-align:center;width:100%;height:100%;border:2px dashed var(--yellow);color:var(--yellow);border-radius:14px;font-size:.62rem;line-height:1.15;padding:2px}
+.star img,.logo img{width:100%;height:100%;object-fit:contain}
+.icons{justify-self:end;display:flex;gap:14px;align-items:center}
+.icons a{position:relative;width:34px;height:34px;color:var(--yellow)}
+.icons svg{width:100%;height:100%}
+.badge{position:absolute;top:-4px;right:-6px;background:var(--navy);color:#fff;font-size:.7rem;font-weight:700;min-width:18px;height:18px;border-radius:9px;display:grid;place-items:center}
+
+/* FRANJA */
+.strip{background:var(--navy);color:var(--cream);text-align:center;font-size:.85rem;padding:9px 12px}
+.strip a{font-weight:800;text-decoration:underline}
+
+/* TÍTULO */
+.title{max-width:700px;margin:48px 20px;background:var(--cream);border-radius:60px;min-height:150px;display:grid;place-items:center;padding:20px}
+.title h1{font-size:clamp(2.2rem,8vw,4rem);font-weight:900;color:var(--pink);letter-spacing:.14em;text-shadow:3px 3px 0 var(--yellow)}
+@media(min-width:760px){.title{margin-inline:auto}}
+
+/* CATÁLOGO */
+.grid{max-width:1180px;margin:0 auto;padding:0 20px 24px;display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.card{background:var(--cream);border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:6px;transition:transform .2s;min-width:0}
+.card:hover{transform:translateY(-4px)}
+.photo{position:relative;aspect-ratio:4/5;border-radius:16px;background:#fec53255;border:2px dashed var(--yellow);display:grid;place-items:center;text-align:center;font-size:.8rem;overflow:hidden;padding:8px}
+.photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.off{position:absolute;top:10px;left:10px;z-index:1;background:var(--pink);color:#fff;font-weight:800;font-size:.85rem;border-radius:20px;padding:4px 12px}
+.card h3{font-size:1rem;font-weight:400;overflow-wrap:anywhere}
+.prices{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
+.now{font-size:1.4rem;font-weight:800;color:var(--pink)}
+.was{font-size:.9rem;text-decoration:line-through;opacity:.7}
+.empty{grid-column:1/-1;text-align:center;padding:30px 0;color:#fff}
+
+.back{display:flex;justify-content:center;padding:10px 20px 50px}
+.btn{display:inline-block;border:0;border-radius:30px;padding:14px 28px;font-weight:800;background:var(--yellow);color:var(--navy)}
+.btn.alt{background:none;color:var(--navy);border:2px solid var(--navy)}
+.btn.pink{background:var(--pink);color:#fff}
+
+/* PRODUCTO */
+.product{max-width:1000px;margin:30px auto 50px;padding:28px;background:var(--cream);border-radius:var(--r);display:grid;grid-template-columns:1.1fr 1fr;gap:32px}
+.gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.gallery .photo:first-child{grid-column:1/-1}
+.info h1{font-size:1.9rem;overflow-wrap:anywhere}
+.info .prices{margin:8px 0 14px}
+.info .now{font-size:2rem}
+.info p{line-height:1.6;margin-bottom:18px}
+.sizes{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 22px}
+.sizes button{border:2px solid var(--navy);background:none;color:var(--navy);border-radius:20px;padding:8px 16px;font-weight:700}
+.sizes button[aria-pressed=true]{background:var(--navy);color:#fff}
+.actions{display:flex;flex-wrap:wrap;gap:12px}
+.msg{min-height:1.4em;margin-top:12px;font-size:.9rem}
+.wrap{padding:0 16px}
+
+/* CARRITO */
+.cart{position:fixed;inset:0 0 0 auto;width:min(380px,100%);background:var(--cream);border-left:4px solid var(--navy);padding:20px;transform:translateX(105%);transition:transform .3s;z-index:20;overflow:auto}
+.cart.open{transform:none}
+.cart h2{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.cart li{list-style:none;display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid #0001}
+.cart li button{border:0;background:none;color:var(--pink);font-weight:700}
+
+/* FOOTER */
+footer{background:var(--navy);color:var(--cream);padding:48px 20px 24px;min-height:220px}
+.fgrid{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+footer h4{color:var(--yellow);margin-bottom:10px}
+footer p,footer li{line-height:1.7;list-style:none;font-size:.95rem}
+footer a:hover{color:var(--yellow)}
+.copy{text-align:center;font-size:.8rem;margin-top:30px;opacity:.7}
+
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.fgrid{grid-template-columns:1fr 1fr}}
+@media(max-width:700px){.product{grid-template-columns:1fr;margin-inline:16px;padding:18px}.grid{gap:14px;padding-inline:14px}.star{width:42px;height:42px}.logo{width:100px;height:36px}.title{min-height:110px;border-radius:44px}}
+@media(max-width:480px){.fgrid{grid-template-columns:1fr}.now{font-size:1.2rem}}
+@media(max-width:340px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="top">
+    <a class="star" id="starLink" href="index.html" aria-label="Inicio"></a>
+    <a class="logo" id="logoLink" href="index.html" aria-label="P!N inicio"></a>
+    <div class="icons">
+      <a id="cartLink" href="#" role="button" aria-label="Carrito">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h3l2.5 12h11L21 7H6"/><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/></svg>
+        <span class="badge" id="cartCount">0</span>
+      </a>
+      <a id="profileLink" href="#" aria-label="Mi perfil">
+        <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="7" r="4.5"/><path d="M3 22c0-5 4-8 9-8s9 3 9 8z"/></svg>
+      </a>
+    </div>
+  </div>
+  <div class="strip"> <a id="moreLink">50% off</a></div>
+</header>
+
+<main>
+  <section id="list">
+    <div class="title"><h1>OFERTAS</h1></div>
+    <section class="grid" id="grid" aria-label="Productos en oferta"></section>
+    <div class="back"><a class="btn" id="homeBtn" href="index.html">← Volver a INICIO</a></div>
+  </section>
+  <section id="productView" class="wrap" hidden></section>
+</main>
+
+<footer>
+  <div class="fgrid">
+    <div><h4>Nosotros</h4><p id="aboutText"></p></div>
+    <div><h4>Contacto</h4><ul id="contactList"></ul></div>
+    <div><h4>Síguenos</h4><ul id="socialList"></ul></div>
+  </div>
+  <p class="copy"><a href="index.html">Inicio</a> · <a href="marcas.html">Marcas</a> · © P!N · Todos los derechos reservados</p>
+</footer>
+
+<aside class="cart" id="cartPanel" aria-label="Carrito">
+  <h2>Tu carrito <button type="button" id="cartClose" aria-label="Cerrar" style="border:0;background:none;font-size:1.6rem">×</button></h2>
+  <ul id="cartItems"></ul>
+  <p id="cartEmpty">Aún no has agregado productos.</p>
+  <p style="margin:16px 0;font-weight:800" id="cartTotal"></p>
+  <a class="btn pink" id="checkoutLink" href="#">Ver carrito y pagar</a>
+</aside>
+
+<script>
+
+const CONFIG = {
+  starImage: "img/estrella.png",            
+  logoImage: "img/logo.png",           
+  links: {
+    home: "index.html",    
+    cart: "carrito.html",   
+  },
+about: "P!N SOMOS UNA PAGINA 100% CONFIABLE",   contact: [               
+    { label: "Correo: pin@gmail.com", url: "" },
+    { label: "WhatsApp: 3002415625", url: "" }
+  ],
+  social: [
+    { label: "Instagram: @pin.",  },
+    { label: "Facebook:  @pin"  },
+    { label: "TikTok: @pin "   }
+  ]  
+  
+};
+
+
+const OFFERS = [
+  { id:"OFERTA-2", name:"BLUSA SEMI AMPLIA TIRAS BRAN",oldPrice:"$29.950" , price:"$26.955",discount:"10%",  desc:"Blusa De Tiras -Silueta Semi Amplia-KARIBIk", sizes:["S","M","L"], images:["img/blusasemi.jpeg","img/blusasemi2.jpeg","img/blusasemi3.jpeg","img/blusasemi4.jpeg"] },
+ { id:"OFERTA-3", name:"TOP BUSTIER 3D",oldPrice:"$209.800", price:"$146.860",discount:"30%",  desc:"Top bustier tono medio con flores 3d-STUDIO F", sizes:["S","M","L"], images:["img/topf.jpeg","img/topf2.jpeg","img/topf3.jpeg","img/topf4.jpeg"] },
+  { id:"OFERTA-4", name:"CHAQUETA BOMBER AURIE", oldPrice:"$199.900" , price:"$99.950",discount:"50%", desc:"Chaqueta bordada de flor.", sizes:["S","M","L"], images:["img/aurie.jpeg","img/aurie2.jpeg","img/aurie3.jpeg","img/aurie4.jpeg"] },
+  { id:"OFERTA-5", name:"CAMISETA BLANCA",oldPrice:"$24.900" ,  price:"$21.165",discount:"15%",  desc:"Camiseta manga corta crema clara con diseño de Megadeth-KOAJ.", sizes:["S","M","L"], images:["img/mega.jpeg","img/mega2.jpeg","img/mega3.jpeg","img/mega4.jpeg"]},
+  { id:"OFERTA-6", name:"BLUSA APLIQUES FLOR", oldPrice:"$279.230" ,price:"129.615",discount:"50%", desc:"Blusa camisera manga ancha, apliques-ESTUDIO F", sizes:["S","M","L"], images:["img/flor.jpeg","img/flor2.jpeg","img/flor3.jpeg","img/flor4.jpeg",] },
+  { id:"OFERTA-7", name:"VESTIDO AJUSTADO", oldPrice:"$199.900" ,discount:"25",   price:"$149.925", desc:"VESTIDO AJUSTADO CORTO OFF SHOULDER BRAD", sizes:["S","M","L"], images:["img/shouldot2.jpeg","img/shouldot.jpeg","img/shouldot3.jpeg","img/shouldot4.jpeg",] },
+
+];
+
+
+const $ = s => document.querySelector(s);
+const esc = t => String(t ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function setLink(el, url){ if(url) el.href = url; else { el.removeAttribute("href"); el.style.cursor = "default"; } }
+
+
+let cart = [];
+try { cart = JSON.parse(localStorage.getItem("pin-cart")) || []; } catch(e){}
+function saveCart(){ try{ localStorage.setItem("pin-cart", JSON.stringify(cart)); }catch(e){} }
+function renderCart(){
+  $("#cartCount").textContent = cart.length;
+  $("#cartEmpty").hidden = cart.length > 0;
+  $("#cartItems").innerHTML = cart.map((c,i) =>
+    `<li><span>${esc(c.name)}${c.size ? " · " + esc(c.size) : ""}<br>${esc(c.price)}</span><button type="button" data-rm="${i}">Quitar</button></li>`).join("");
+  $("#cartTotal").textContent = cart.length ? cart.length + " producto(s)" : "";
+}
+const panel = $("#cartPanel");
+$("#cartItems").addEventListener("click", e => { if(e.target.dataset.rm){ cart.splice(+e.target.dataset.rm,1); saveCart(); renderCart(); } });
+$("#cartClose").onclick = () => panel.classList.remove("open");
+
+function initStatic(){
+  const L = CONFIG.links;
+  $("#logoLink").innerHTML = CONFIG.logoImage ? `<img src="${esc(CONFIG.logoImage)}" alt="P!N">` : `<span class="slot">Tu logo<br>400×140 px</span>`;
+  $("#starLink").innerHTML = CONFIG.starImage ? `<img src="${esc(CONFIG.starImage)}" alt="">` : `<span class="slot">Tu ícono<br>200×200</span>`;
+  [$("#logoLink"), $("#starLink"), $("#homeBtn")].forEach(a => a.href = L.home || "index.html");
+  setLink($("#profileLink"), L.profile);
+  setLink($("#moreLink"), L.more);
+  $("#checkoutLink").href = L.cart || "carrito.html";
+  if(L.cart) $("#cartLink").href = L.cart;
+  else $("#cartLink").addEventListener("click", e => { e.preventDefault(); panel.classList.add("open"); });
+  $("#aboutText").textContent = CONFIG.about;
+  const li = x => `<li><a ${x.url ? `href="${esc(x.url)}" target="_blank" rel="noopener"` : ""}>${esc(x.label)}</a></li>`;
+  $("#contactList").innerHTML = CONFIG.contact.map(li).join("");
+  $("#socialList").innerHTML = CONFIG.social.map(li).join("");
+}
+
+const prices = p => `<div class="prices"><span class="now">${esc(p.price) || "$ Precio con descuento"}</span>${p.oldPrice ? `<span class="was">${esc(p.oldPrice)}</span>` : ""}</div>`;
+const badge = p => p.discount ? `<span class="off">${esc(p.discount)}</span>` : "";
+
+function renderGrid(){
+  $("#grid").innerHTML = OFFERS.map(p => {
+    const href = p.url || `#/producto/${encodeURIComponent(p.id)}`;
+    const img = p.images[0] ? `<img src="${esc(p.images[0])}" alt="${esc(p.name)}" loading="lazy" decoding="async">` : "Foto del producto";
+    return `<a class="card" href="${esc(href)}"><div class="photo">${badge(p)}${img}</div><h3>${esc(p.name)}</h3>${prices(p)}</a>`;
+  }).join("");
+}
+
+function renderProduct(id){
+  const p = OFFERS.find(x => x.id === id);
+  const view = $("#productView");
+  if(!p){ view.innerHTML = `<div class="product"><div><h1>Producto no encontrado</h1><p><a class="btn" href="#">Volver a ofertas</a></p></div></div>`; return; }
+  const slots = [0,1,2,3].map(i => `<div class="photo">${i===0 ? badge(p) : ""}${p.images[i] ? `<img src="${esc(p.images[i])}" alt="${esc(p.name)} ${i+1}" loading="lazy">` : "Foto " + (i+1)}</div>`).join("");
+  view.innerHTML = `<div class="product">
+    <div class="gallery">${slots}</div>
+    <div class="info">
+      <h1>${esc(p.name)}</h1>${prices(p)}
+      <p>${esc(p.desc)}</p>
+      <strong>Tallas disponibles</strong>
+      <div class="sizes" id="sizes">${p.sizes.map((s,i) => `<button type="button" aria-pressed="${i===0}" data-size="${esc(s)}">${esc(s)}</button>`).join("")}</div>
+      <div class="actions"><button class="btn pink" type="button" id="buyBtn">Comprar</button><a class="btn alt" href="#">Volver a ofertas</a></div>
+      <p class="msg" id="buyMsg" role="status"></p>
+    </div></div>`;
+  let size = p.sizes[0] || "";
+  $("#sizes").addEventListener("click", e => {
+    const b = e.target.closest("button"); if(!b) return;
+    size = b.dataset.size;
+    $("#sizes").querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b));
+  });
+  $("#buyBtn").onclick = () => {
+    if(p.buyUrl){ location.href = p.buyUrl; return; }
+    cart.push({ id:p.id, name:p.name, price:p.price, size, image:(p.images&&p.images[0])||"", href:"ofertas.html#/producto/"+encodeURIComponent(p.id), note:p.note||"", isNew:!!p.isNew, sel:true }); saveCart(); renderCart();
+    $("#buyMsg").textContent = "Agregado al carrito.";
+    panel.classList.add("open");
+  };
+}
+
+function route(){
+  const m = location.hash.match(/^#\/producto\/(.+)$/);
+  $("#list").hidden = !!m;
+  $("#productView").hidden = !m;
+  panel.classList.remove("open");
+  if(m) renderProduct(decodeURIComponent(m[1]));
+  window.scrollTo(0,0);
+}
+window.addEventListener("hashchange", route);
+window.addEventListener("storage", () => { try{ cart = JSON.parse(localStorage.getItem("pin-cart")) || []; }catch(e){} renderCart(); });
+
+initStatic(); renderCart(); renderGrid(); route();
+</script>
+</body>
+</html>

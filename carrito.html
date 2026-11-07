@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>P!N · Carrito</title>
+<style>
+:root{--pink:#dd0080;--yellow:#fec532;--navy:#141c4d;--deep:#0a0038;--cream:#fbf7f0;--line:#0a003822}
+*{box-sizing:border-box;margin:0}
+body{font-family:"Trebuchet MS","Segoe UI",system-ui,sans-serif;background:var(--cream);color:var(--navy);letter-spacing:.04em;overflow-x:hidden;min-height:100vh;display:flex;flex-direction:column}
+a{color:inherit;text-decoration:none}
+button{font:inherit;letter-spacing:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--pink);outline-offset:3px}
+
+/* ENCABEZADO */
+.ship{background:var(--deep);color:var(--yellow);display:flex;align-items:center;gap:14px;padding:14px 24px}
+.ship svg{width:58px;height:44px;flex:none}
+.ship strong{display:block;font-size:1.15rem;letter-spacing:.14em}
+.ship small{font-size:.8rem;letter-spacing:.16em}
+.safe{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 24px;border-bottom:1px solid var(--line)}
+.safe div{display:flex;align-items:center;gap:12px;font-weight:700;color:#111;font-size:.95rem;letter-spacing:.02em}
+.safe svg{width:36px;height:46px;flex:none}
+.logo{width:130px;height:42px;flex:none;color:var(--pink)}
+.logo img{width:100%;height:100%;object-fit:contain;object-position:right}
+.slot{display:grid;place-items:center;text-align:center;width:100%;height:100%;border:2px dashed currentColor;border-radius:12px;font-size:.62rem;line-height:1.15;padding:2px}
+
+main{flex:1;width:100%;max-width:960px;margin:0 auto;padding-bottom:30px}
+.crumbs{padding:14px 24px 4px;color:#999;font-weight:700;letter-spacing:.18em;font-size:.95rem}
+.crumbs a:hover{color:var(--pink)}
+.all{display:flex;align-items:center;gap:14px;padding:12px 24px 16px;border-bottom:1px solid var(--line);font-weight:800;font-size:1.1rem}
+
+/* casilla circular */
+.chk{appearance:none;-webkit-appearance:none;width:26px;height:26px;border:2px solid var(--navy);border-radius:50%;background:transparent;flex:none;display:grid;place-items:center;cursor:pointer;margin:0}
+.chk:checked{background:var(--pink);border-color:var(--pink)}
+.chk:checked::after{content:"";width:7px;height:12px;border:solid #fff;border-width:0 3px 3px 0;transform:rotate(45deg) translate(-1px,-1px)}
+.all .chk{width:34px;height:34px}
+
+/* PRODUCTOS */
+.row{display:flex;align-items:center;gap:14px;padding:26px 24px;border-bottom:1px solid var(--line)}
+.photo{width:clamp(96px,28vw,240px);aspect-ratio:3/4;flex:none;background:#0a00380d;display:grid;place-items:center;text-align:center;font-size:.75rem;overflow:hidden;color:#0a003899}
+.photo img{width:100%;height:100%;object-fit:contain}
+.info{min-width:0;flex:1;align-self:flex-start;display:flex;flex-direction:column;gap:6px}
+.tag{align-self:flex-start;background:var(--pink);color:var(--yellow);font-size:.85rem;padding:2px 8px}
+.info h2{font-size:clamp(1rem,3.8vw,1.6rem);line-height:1.2;overflow-wrap:anywhere}
+.info h2 a:hover{color:var(--pink)}
+.note,.size{font-size:.95rem}
+.price{font-size:1rem;margin-top:10px}
+.del{align-self:flex-start;border:0;background:none;color:var(--pink);font-weight:700;padding:6px 0;text-decoration:underline;margin-top:auto}
+
+.empty{text-align:center;padding:60px 24px}
+.empty p{margin-bottom:18px;font-size:1.1rem}
+.btn{display:inline-block;border:0;border-radius:30px;padding:14px 30px;font-weight:800;background:var(--pink);color:#fff}
+
+/* BARRA DE COMPRA */
+.bar{position:sticky;bottom:12px;margin:18px 16px 0;z-index:5}
+.pay{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--navy);border:3px solid var(--deep);border-radius:60px;padding:6px 8px 6px 34px;color:#fff}
+.total{font-size:clamp(1.3rem,6vw,2.2rem);font-weight:800;overflow-wrap:anywhere}
+.pay button{background:var(--pink);color:#fff;border:0;border-radius:50px;font-size:clamp(1.1rem,5vw,1.8rem);font-weight:800;padding:14px clamp(24px,10vw,110px)}
+.pay button:disabled{opacity:.55;cursor:not-allowed}
+.msg{min-height:1.3em;text-align:center;font-size:.9rem;font-weight:700;background:var(--cream);border-radius:12px;margin-bottom:6px;padding:2px 8px}
+
+footer{background:var(--deep);color:var(--cream);padding:40px 24px;min-height:150px;text-align:center}
+footer a{margin:0 10px;font-size:.9rem}
+footer a:hover{color:var(--yellow)}
+
+@media(max-width:480px){.ship,.safe,.crumbs,.all,.row{padding-inline:16px}.safe div{font-size:.8rem}.logo{width:90px}.pay{padding-left:20px}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="ship">
+    <svg viewBox="0 0 64 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6h28v26H20zM48 14h8l6 10v8h-14"/><circle cx="28" cy="38" r="5"/><circle cx="54" cy="38" r="5"/><path d="M2 12h12M6 20h10M2 28h12"/></svg>
+    <div><strong id="shipTitle">Envío gratis</strong><small>Especial para ti</small></div>
+  </div>
+  <div class="safe">
+    <div>
+      <svg viewBox="0 0 36 46" aria-hidden="true"><path d="M9 20v-6a9 9 0 0118 0v6" fill="none" stroke="#fec532" stroke-width="4"/><rect x="2" y="19" width="32" height="25" rx="6" fill="#fec532"/><text x="18" y="38" text-anchor="middle" font-size="17" font-weight="900" fill="#dd0080">!</text></svg>
+      Todos los datos están protegidos
+    </div>
+    <a class="logo" id="logoLink" aria-label="P!N inicio"></a>
+  </div>
+</header>
+
+<main>
+  <nav class="crumbs" aria-label="Ruta"><a id="homeLink">Inicio</a> &gt; Carrito</nav>
+  <label class="all"><input type="checkbox" class="chk" id="selAll" aria-label="Seleccionar todo"> <span>Seleccionar todo (<span id="selCount">0</span>)</span></label>
+  <section id="items" aria-label="Productos en el carrito"></section>
+  <div class="bar">
+    <p class="msg" id="msg" role="status"></p>
+    <div class="pay"><span class="total" id="total">$0</span><button type="button" id="payBtn">Pagar</button></div>
+  </div>
+</main>
+
+<footer>
+  <a id="fHome">Inicio</a><a href="ofertas.html">Ofertas</a><a href="marcas.html">Marcas</a>
+</footer>
+
+<script>
+/* =====================================================
+   1. CONFIGURACIÓN — EDITA SOLO ESTA SECCIÓN
+   ===================================================== */
+const CONFIG = {
+  logoImage: "img/logo.png",             // ← logo P!N en fucsia (400×140 px, PNG transparente)
+  links: {
+    home: "index.html",      // ← INICIO / catálogo
+    shipping: "",            // ← URL de información de envíos (si está vacío, no se muestra el ">")
+    checkout: ""             // ← URL del proceso de pago (aún no definido)
+  }
+};
+
+/* =====================================================
+   2. LÓGICA — el carrito se lee de localStorage ("pin-cart"),
+   donde lo guardan index.html, ofertas.html y marcas.html.
+   Cada producto guardado trae: id, name, price, size, image,
+   href (página del producto), note, isNew y sel (seleccionado).
+   ===================================================== */
+const $ = s => document.querySelector(s);
+const esc = t => String(t ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const num = v => Number(String(v ?? "").replace(/\D/g, "")) || 0;
+const money = n => "$" + n.toLocaleString("es-CO");
+
+let cart = [];
+try { cart = JSON.parse(localStorage.getItem("pin-cart")) || []; } catch(e){}
+const save = () => { try{ localStorage.setItem("pin-cart", JSON.stringify(cart)); }catch(e){} };
+
+function initStatic(){
+  const L = CONFIG.links;
+  $("#homeLink").href = $("#fHome").href = L.home || "index.html";
+  $("#logoLink").href = L.home || "index.html";
+  $("#logoLink").innerHTML = CONFIG.logoImage ? `<img src="${esc(CONFIG.logoImage)}" alt="P!N">` : `<span class="slot">Tu logo<br>400×140 px</span>`;
+  if(L.shipping){
+    const t = $("#shipTitle");
+    t.innerHTML = `<a href="${esc(L.shipping)}">Envío gratis &gt;</a>`;
+  }
+}
+
+function render(){
+  const box = $("#items");
+  if(!cart.length){
+    box.innerHTML = `<div class="empty"><p>Tu carrito está vacío.</p><a class="btn" href="${esc(CONFIG.links.home || "index.html")}">Ir al catálogo</a></div>`;
+  } else {
+    box.innerHTML = cart.map((c,i) => `
+      <article class="row">
+        <input type="checkbox" class="chk" data-sel="${i}" ${c.sel ? "checked" : ""} aria-label="Seleccionar ${esc(c.name)}">
+        <a class="photo" href="${esc(c.href || "#")}">${c.image ? `<img src="${esc(c.image)}" alt="${esc(c.name)}" loading="lazy" decoding="async">` : "Foto del producto"}</a>
+        <div class="info">
+          ${c.isNew ? `<span class="tag">Nuevo</span>` : ""}
+          <h2><a href="${esc(c.href || "#")}">${esc(c.name)}</a></h2>
+          ${c.note ? `<p class="note">${esc(c.note)}</p>` : ""}
+          ${c.size ? `<p class="size">${esc(c.size)}</p>` : ""}
+          <p class="price">${c.price ? esc(c.price) : "$ Precio"}</p>
+          <button type="button" class="del" data-del="${i}">Eliminar</button>
+        </div>
+      </article>`).join("");
+  }
+  const sel = cart.filter(c => c.sel);
+  $("#selCount").textContent = sel.length;
+  $("#selAll").checked = cart.length > 0 && sel.length === cart.length;
+  $("#selAll").disabled = !cart.length;
+  $("#total").textContent = money(sel.reduce((s,c) => s + num(c.price), 0));
+}
+
+$("#items").addEventListener("change", e => {
+  if(e.target.dataset.sel !== undefined){ cart[+e.target.dataset.sel].sel = e.target.checked; save(); render(); }
+});
+$("#items").addEventListener("click", e => {
+  if(e.target.dataset.del !== undefined){ cart.splice(+e.target.dataset.del, 1); save(); render(); }
+});
+$("#selAll").addEventListener("change", e => { cart.forEach(c => c.sel = e.target.checked); save(); render(); });
+
+/* Pagar: guarda la selección en "pin-checkout" para que el futuro
+   sistema de pago la lea, y navega a CONFIG.links.checkout. */
+$("#payBtn").addEventListener("click", () => {
+  const sel = cart.filter(c => c.sel);
+  const msg = $("#msg");
+  if(!sel.length){ msg.textContent = "Selecciona al menos un producto para continuar."; return; }
+  try{ localStorage.setItem("pin-checkout", JSON.stringify({ items: sel, total: sel.reduce((s,c) => s + num(c.price), 0) })); }catch(e){}
+  if(CONFIG.links.checkout) location.href = CONFIG.links.checkout;
+  else msg.textContent = "El proceso de pago aún no está disponible.";
+});
+
+window.addEventListener("storage", () => { try{ cart = JSON.parse(localStorage.getItem("pin-cart")) || []; }catch(e){} render(); });
+initStatic(); render();
+</script>
+</body>
+</html>
